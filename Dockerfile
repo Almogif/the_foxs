@@ -5,13 +5,11 @@ FROM python:3
 # Set the working directory in the container
 WORKDIR /app
 
-
 # Copy the necessary files into the container
 COPY game.py /app/
 COPY graphics /app/graphics
 COPY fonts /app/fonts
 
-# Fix typo: python-numpy -> python3-numpy
 # Install pygame and its dependencies
 RUN apt-get update && apt-get install -y \
     python-dev \
@@ -22,7 +20,7 @@ RUN apt-get update && apt-get install -y \
     libsdl-mixer1.2-dev \
     libsdl-ttf2.0-dev \
     libsmpeg-dev \
-    python3-numpy \  # Change from python-numpy to python3-numpy
+    python3-numpy \  # Corrected typo: changed from python-numpy to python3-numpy
     subversion \
     ffmpeg \
     libportmidi-dev \
