@@ -9,11 +9,6 @@ COPY game.py /app/
 COPY graphics /app/graphics
 COPY fonts /app/fonts
 
-# Install pygame and its dependencies
-RUN apt-get update && apt-get install -y \
-    python-dev \
-    python3-dev \
-
 
 # Install the specified version of pygame
 RUN pip install pygame==1.9.6
