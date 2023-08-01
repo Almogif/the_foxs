@@ -1,4 +1,3 @@
-
 # Use the official Python image as the base
 FROM python:3
 
@@ -27,7 +26,8 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install pygame==1.9.6  # Specify the version of pygame to be installed
+# Install the specified version of pygame
+RUN pip install pygame==1.9.6
 
 # Define the entry point command to run your game
 CMD ["python", "game.py"]
