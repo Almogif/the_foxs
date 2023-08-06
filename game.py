@@ -62,12 +62,10 @@ class Valture(pygame.sprite.Sprite):
         vulture3 = pygame.image.load('graphics/vulture/v3.png').convert_alpha()
         vulture4 = pygame.image.load('graphics/vulture/v4.png').convert_alpha()
         self.frames = [vulture1, vulture2, vulture3, vulture4]
-        y_pos = 210
-
 
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
-        self.rect = self.image.get_rect(midbottom = (randint(900,1100),y_pos))
+        self.rect = self.image.get_rect(midbottom = (randint(900,1100),randint(100,250)))
 
     def animation_state(self):
         self.animation_index += 0.1 
@@ -78,6 +76,7 @@ class Valture(pygame.sprite.Sprite):
         self.animation_state()
         self.rect.x -= randint(5,8)
         self.destroy()
+
 
     def destroy(self):
         if self.rect.x <= -100: 
@@ -184,11 +183,12 @@ def collision_sprite():
 	else: return True
 
 def collision_coin():
-	if pygame.sprite.spritecollide(player.sprite,coin_group,False):
-		coin_group.empty()
-		return 5
-	else: return 0
+    coins_collected = 0
+    collided_coins = pygame.sprite.spritecollide(player.sprite, coin_group, True)  # Get a list of collided coins and remove them
 
+    for coin in collided_coins:
+        coins_collected += 5  # Increment the number of collected coins for each collided coin
+    return coins_collected
     
 pygame.init()
 pygame.display.set_caption('the foxs game')
@@ -202,24 +202,25 @@ start_time = 0
 score_save = 0
 global curr_time
 curr_time = 0
+
 #TIMER
-time_snake = pygame.USEREVENT + 1
-time_scorpio = pygame.USEREVENT + 1
-time_valture = pygame.USEREVENT + 1
 time_coin = pygame.USEREVENT + 1
+time_ = pygame.USEREVENT + 1
+
 
 sky_surface = pygame.image.load('graphics/sky2.png').convert()
 gorwnd_surface = pygame.image.load('graphics/grownd.png').convert()
 title_surface = test_font.render('The Foxs', False, 'White').convert()
-start = test_font2.render('For Start click Space', False, 'Black').convert()
-start_rect = start.get_rect(midbottom = (400,270))
+click_start = test_font2.render('For Start click Space', False, 'Black').convert()
+start_rect = click_start.get_rect(midbottom = (400,270))
 end_surface = pygame.image.load('graphics/thefox.png').convert()
 score = title_surface.get_rect(midbottom = (400,400))
 
-pygame.time.set_timer(time_snake, 5000)
-pygame.time.set_timer(time_scorpio, 5000)
-pygame.time.set_timer(time_valture, 5000)
-pygame.time.set_timer(time_coin, 5000)
+
+
+
+pygame.time.set_timer(time_coin, randint(100,1000))
+pygame.time.set_timer(time_, 3500)
 
 bg_music = pygame.mixer.Sound('audio/music.wav')
 bg_music.play(loops = -1)
@@ -240,17 +241,22 @@ while True:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
                 start_time = int(pygame.time.get_ticks()/1000)
+        else:
+            if event.type == time_coin:
+                coin_group.add(Coin())
 
-        if event.type == time_valture:
-            obstacle_group.add(Valture())
-        if event.type == time_snake:
-            obstacle_group.add(Snake())
-        if event.type == time_scorpio:
-            obstacle_group.add(Scorpio())
-        if event.type == time_coin:
-            coin_group.add(Coin())
-
-
+            if event.type == time_:
+                obstacle_ = choice(['Valture', 'Snake', 'Scorpio']) 
+                if obstacle_ == 'Valture':
+                    print('Valture')
+                    obstacle_group.add(Valture())
+                elif obstacle_ == 'Snake':
+                    print('Snake')
+                    obstacle_group.add(Snake())
+                elif obstacle_ == 'Scorpio':
+                    print('Scorpio')
+                    obstacle_group.add(Scorpio())
+                    
 
     if game_active:
 
@@ -273,7 +279,7 @@ while True:
 
     else:
         screen.blit(end_surface,(0,0))
-        screen.blit(start,(start_rect))
+        screen.blit(click_start,(start_rect))
         score_msg = test_font.render(f'your score: {score_save}', False, 'Black')
         key1 = test_font.render(f'Z for big jump, X small jump', False, 'Black')
         key1_rect = key1.get_rect(center = (300, 200))
@@ -287,7 +293,17 @@ while True:
         added_score = 0
         curr_time = 0
 
+
     # draw ll our elements
     # update everything 
     pygame.display.update()
     clock.tick(60) # max fps
+
+
+
+        # if event.type == time_valture:
+        #     obstacle_group.add(Valture())
+        # if event.type == time_snake:
+        #     obstacle_group.add(Snake())
+        # if event.type == time_scorpio:
+        #     obstacle_group.add(Scorpio())
